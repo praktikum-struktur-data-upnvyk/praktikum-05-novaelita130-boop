@@ -44,15 +44,15 @@ using namespace std;
 // persis, hanya saja ia juga memindahkan `s.top` dan membuang node-nya.
 
 void inisialisasi(Stack& s) {
-    s.top = nullptr;
+    s.top = NULL;
 }
 
 bool isEmpty(const Stack& s) {
-    return s.top == nullptr;
+    return s.top == NULL;
 }
 
 bool peek(Stack& s, int& nilai) {
-    if (s.top == nullptr) return false;
+    if (s.top == NULL) return false;
 
     nilai = s.top->data;
     return true;
@@ -60,7 +60,7 @@ bool peek(Stack& s, int& nilai) {
 
 string display(Stack& s) {
     string hasil;
-    for (Node* p = s.top; p != nullptr; p = p->next) {
+    for (Node* p = s.top; p != NULL; p = p->next) {
         if (!hasil.empty()) hasil += " ";
         hasil += to_string(p->data);
     }
@@ -71,22 +71,63 @@ string display(Stack& s) {
 
 // SOAL 1
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* baru = new Node;
+    baru->data = nilai;
+
+    baru->next = s.top;
+    s.top = baru;
+    return true;
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (s.top == NULL){
+        return false;
+    }
+    nilai = s.top->data;
+    Node* temp = s.top;
+    s.top = s.top->next;
+
+    delete temp;
+    return true;
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    while (s.top != NULL){
+        Node* temp = s.top;
+        s.top = s.top ->next;
+        delete temp;
+    }
 }
 
 // SOAL 4
-bool kurungSeimbang(const string& ekspresi) {
-    return false;
+ bool kurungSeimbang(const string& ekspresi) {
+    Stack s;
+    inisialisasi(s);
+
+    for (char c : ekspresi) {
+        if ( c == '(' || c == '[' || c == '{') {
+            push (s, c);
+        } else if (c == ')' || c == ']' || c == '}' ) {
+        int buka;
+
+            if (!pop (s, buka)) {
+                return false;
+            }
+
+            if ((c == ')' && buka != '(') || (c == ']' && buka != '[') || (c == '}' && buka != '{') ) {
+                clear (s);
+                return false;
+            }
+        }
+    }
+    bool hasil = isEmpty(s);
+    clear(s);
+    return hasil;
 }
+
+
 
 // =============================================================================
 // MAIN() — memeragakan sesi mengetik. TIDAK dinilai, bebas diubah.
